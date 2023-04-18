@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import CardList from "./CardList";
-import SearchBox from "./SearchBox";
+import { Scroll } from "../Components/Scroll";
+import CardList from "../Components/CardList";
+import SearchBox from "../Components/SearchBox";
 import "./App.css";
 
 class App extends Component {
@@ -23,23 +24,22 @@ class App extends Component {
   };
 
   render() {
-    const filterRobots = this.state.robots.filter((robot) => {
-      return robot.name
-        .toLowerCase()
-        .includes(this.state.searchfield.toLowerCase());
+    const { robots, searchfield } = this.state;
+    const filterRobots = robots.filter((robot) => {
+      return robot.name.toLowerCase().includes(searchfield.toLowerCase());
     });
     // if the server is slow to provide the info the conitional statement below will display a loading message on the browser. Else will reder the robots.
-    if (this.state.robots.length === 0) {
-      return <h1>Loading</h1>;
-    } else {
-      return (
-        <div className="tc">
-          <h1 className="f1">RoboFriends</h1>
-          <SearchBox onSearchChange={this.onSearchChange} />
-          <CardList robots={filterRobots} />;
-        </div>
-      );
-    }
+    return !robots.length ? (
+      <h1>Loading</h1>
+    ) : (
+      <div className="tc">
+        <h1 className="f1">RoboFriends</h1>
+        <SearchBox onSearchChange={this.onSearchChange} />
+        <Scroll>
+          <CardList robots={filterRobots} />
+        </Scroll>
+      </div>
+    );
   }
 }
 
